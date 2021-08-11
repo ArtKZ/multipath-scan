@@ -56,10 +56,12 @@ try_delete_lun ()
 
 delete_offline_luns ()
 {
-    for dev in  /dev/sd*[a-z]
+    for dev in /dev/sd*[a-z]
     do
-	dev=`echo $dev | sed 's/\/dev\///'`;
-	try_delete_lun $dev &
+    if [ -b $dev ]; then
+        dev=`echo $dev | sed 's/\/dev\///'`;
+        try_delete_lun $dev &
+       fi
     done
     wait
 }
@@ -124,10 +126,10 @@ case "$1" in
 	echo "Need one of commands:"
 	echo "	--scan-new		Scans all SCSHI hosts for new|changed devices."
 	echo "	--remove-offline	Removes stale offline devices."
-	echo "	--resca-nall		Combo of two above."
+	echo "	--rescan-all		Combo of two above."
 	echo "	--rescan-wwid <WWID>	Rescan slaves of single multipath device WWID"
 	echo "				for changes."
-	echo "	--delete-wwid <WWID>	Remove sinddle multipath device WWID and its slaves"
+	echo "	--delete-wwid <WWID>	Remove single multipath device WWID and its slaves"
 	;;
 esac
 
